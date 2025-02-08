@@ -1,7 +1,8 @@
 <?php
 session_start();
 if (isset($_SESSION["user"])) {
-   header("Location: index.php");
+    header("Location: index.php");
+    exit();
 }
 ?>
 <!DOCTYPE html>
@@ -10,7 +11,7 @@ if (isset($_SESSION["user"])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Form</title>
+    <title>Registration Form</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -110,7 +111,7 @@ input{
 ::placeholder{
     color: #e5e5e5;
 }
-.log{
+.submit{
     margin-top: 50px;
     margin-bottom: 35px;
     width: 100%;
@@ -130,7 +131,6 @@ a{
 }
 
     </style>
-
 </head>
 <body>
     <div class="background">
@@ -138,57 +138,76 @@ a{
         <div class="shape"></div>
     </div>
         <?php
-        if (isset($_POST["login"])) {
-           $username = $_POST["username"];
-           $password = $_POST["password"];
-            require_once "conn_user.php";
+        if (isset($_POST["submit"])) {
+            $username = $_POST["username"];
+            $password = $_POST["password"];
+            $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+            $errors = array();
 
-            if ($conn === false) {
-                echo "<div class='alert alert-danger'>Failed to connect to the database.</div>";
-                die();
+            // Validate input
+            if (empty($username) || empty($password)) {
+                array_push($errors, "All fields are required");
+            }
+            if (strlen($password) < 8) {
+                array_push($errors, "Password must be at least 8 characters long");
             }
 
+            require_once "conn_user.php";
+
+            // Check if username already exists using prepared statements
             $sql = "SELECT * FROM users WHERE username = ?";
             $stmt = mysqli_stmt_init($conn);
             if (mysqli_stmt_prepare($stmt, $sql)) {
                 mysqli_stmt_bind_param($stmt, "s", $username);
                 mysqli_stmt_execute($stmt);
                 $result = mysqli_stmt_get_result($stmt);
-                $user = mysqli_fetch_array($result, MYSQLI_ASSOC);
-
-            if ($user) {
-                    if (password_verify($password, $user["password"])) {
-                        $_SESSION["user"] = "yes";
-                        header("Location: index.php");
-                        exit();
-                    } else {
-                        echo "<div class='alert alert-danger'>Password does not match</div>";
-                    }
-                } else {
-                    echo "<div class='alert alert-danger'>Username does not match</div>";
+                if (mysqli_num_rows($result) > 0) {
+                    array_push($errors, "Username already exists!");
                 }
             } else {
-                echo "<div class='alert alert-danger'>Something went wrong. Please try again later.</div>";
+                array_push($errors, "Query failed: " . mysqli_error($conn));
             }
+
+            // Display errors or insert user
+            if (count($errors) > 0) {
+                foreach ($errors as $error) {
+                    echo "<div class='alert alert-danger'>$error</div>";
+                }
+            } else {
+                // Insert new user
+                $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
+                $stmt = mysqli_stmt_init($conn);
+                if (mysqli_stmt_prepare($stmt, $sql)) {
+                    mysqli_stmt_bind_param($stmt, "ss", $username, $passwordHash);
+                    mysqli_stmt_execute($stmt);
+                    echo "<div class='alert alert-success'>You are registered successfully.</div>";
+                } else {
+                    echo "<div class='alert alert-danger'>Something went wrong. Please try again later.</div>";
+                }
+            }
+
+            // Close the statement and connection
+            mysqli_stmt_close($stmt);
+            mysqli_close($conn);
         }
         ?>
-      <form action="login.php" method="post">
-        <h3>Login Here</h3>
-        <label for="username">Username</label>
-        <input type="text" placeholder="Username" id="username" name="username">
+        <form action="registration.php" method="post">
+            <h3>Register Here</h3>
+            <label for="username">Username</label>
+            <input type="text" placeholder="Username" id="username" name="username">
 
-        <label for="password">Password</label>
-        <input type="password" placeholder="Password" id="password" name="password">
+            <label for="password">Password</label>
+            <input type="password" placeholder="Password" id="password" name="password">
 
-        <button class="log" name="login">Log In</button> 
-        <p align="center">don't have an account? <a href="registration.php" >Register</a></p>
+            <button class="submit" name="submit">Register</button>
+            <p align="center">already registered? <a href="login.php" >login</a></p>
 
-      </form>
+        </form>
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
-    </script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+        </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js" integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
-    </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js" integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+        </script>
 </body>
 </html>
