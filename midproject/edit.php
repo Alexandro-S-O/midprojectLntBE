@@ -8,7 +8,10 @@
     <title>Edit Book</title>
     <style>
         body {
-        background-color: lightblue;
+            background-image: url('img/bg.jpg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 100% 100%;
         }
 
         h1 {
@@ -26,8 +29,7 @@
             </div>
         </header>
         <form action="add_book.php" method="post">
-            <?php 
-            
+            <?php
             if (isset($_GET['id'])) {
                 include("conn_book.php");
                 $id = $_GET['id'];
@@ -37,18 +39,23 @@
                 ?>
             
             <div class="form-elemnt my-4">
+                <label for="">Book Id :</label>
                 <input type="text" class="form-control" name="book_id" required placeholder="Book id:" value="<?php echo $row["book_id"]; ?>">
             </div>            
-                     <div class="form-elemnt my-4">
+            <div class="form-elemnt my-4">
+            <label for="">Book Title :</label>
                 <input type="text" class="form-control" name="title" required placeholder="Book Title:" value="<?php echo $row["title"]; ?>">
             </div>
             <div class="form-elemnt my-4">
+            <label for="">Author Name :</label>
                 <input type="text" class="form-control" name="author" required placeholder="Author Name:" value="<?php echo $row["author"]; ?>">
             </div>
             <div class="form-elemnt my-4">
+            <label for="">Publisher :</label>
                 <input type="text" class="form-control" name="publisher" required placeholder="Publisher:" value="<?php echo $row["publisher"]; ?>">
             </div>
             <div class="form-elemnt my-4">
+            <label for="">Number of Pages :</label>
                 <input type="text" class="form-control" name="page" required placeholder="Number of page" value="<?php echo $row["page"]; ?>">
             </div>
             <input type="hidden" value="<?php echo $id; ?>" name="id">
