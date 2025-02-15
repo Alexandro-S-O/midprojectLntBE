@@ -187,6 +187,7 @@ a{
             }
 
             // Close the statement and connection
+            header("Location: login.php");
             mysqli_stmt_close($stmt);
             mysqli_close($conn);
         }
