@@ -15,33 +15,22 @@ if (!isset($_SESSION["user"])) {
     <title>Document</title>
 </head>
 <body>
-    <header>
-        <div class="container">
-          <h1 class="logo"></h1>
-          <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Navbar</a>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <img src="img\binuss.png" alt="logo" height="50" class="ms-3">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
       <li class="nav-item active">
-        <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="index.php">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Features</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="logout.php">Logout</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+        <a class="nav-link text-danger" href="logout.php">Logout</a>
       </li>
     </ul>
   </div>
 </nav>
-        </div>
-      </header>
       <div class="container my-5">
             <h1 class="d-flex justify-content-between my-4">Add New Book</h1>
             <div>
@@ -49,19 +38,24 @@ if (!isset($_SESSION["user"])) {
             </div>
         <form action="add_book.php" method="post">
             <div class="form-element my-4">
-                <input type="text" class="form-control" name="book_id" placeholder="Book id" required>
+              <label for="">Book Id :</label>
+                <input type="text" class="form-control" name="book_id" required>
             </div>    
             <div class="form-element my-4">
-                <input type="text" class="form-control" name="title" placeholder="Book Title" required>
+            <label for="">Book Title :</label>
+                <input type="text" class="form-control" name="title" required>
             </div>
             <div class="form-element my-4">
-                <input type="text" class="form-control" name="author" placeholder="Author Name" required>
+            <label for="">Author Name :</label>
+                <input type="text" class="form-control" name="author" required>
             </div>
             <div class="form-element my-4">
-                <input type="text" class="form-control" name="publisher" placeholder="Publisher" required>
+            <label for="">Publisher :</label>
+                <input type="text" class="form-control" name="publisher" required>
             </div>
             <div class="form-element my-4">
-                <input type="text" class="form-control" name="page" placeholder="Number of Pages" required>
+            <label for="">Number of Pages :</label>
+                <input type="text" class="form-control" name="page" required>
             </div>
             <div class="form-element my-4">
                 <input type="submit" name="create" value="Add Book" class="btn btn-primary">
