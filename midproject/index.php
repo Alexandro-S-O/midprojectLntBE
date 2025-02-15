@@ -18,10 +18,15 @@ if (!isset($_SESSION["user"])) {
         min-height: 100vh;
         margin: 0;
         background-color: white;
+        background-image: url('img/bg.jpg');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: 100% 100%;
         }
 
         .container {
         flex: 1;
+        background-color: transparent !important;
         }
 
         table td, table th {
@@ -39,6 +44,11 @@ if (!isset($_SESSION["user"])) {
             padding-left: 60%;
             padding-top: 10px;
         }
+
+        header {
+            background-color : transparent;
+        }
+
     </style>
     <script>
         function confirmDelete(bookId) {
@@ -51,7 +61,7 @@ if (!isset($_SESSION["user"])) {
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Navbar</a>
+  <img src="img\binuss.png" alt="logo" height="50" class="ms-3">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -61,13 +71,7 @@ if (!isset($_SESSION["user"])) {
         <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Features</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="logout.php">Logout</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+        <a class="nav-link text-danger" href="logout.php">Logout</a>
       </li>
     </ul>
   </div>
@@ -116,15 +120,15 @@ if (!isset($_SESSION["user"])) {
         }
         ?>
         
-        <table class="table table-bordered">
+        <table class="table table-bordered table-light border-dark">
         <thead>
             <tr>
-                <th>Book id</th>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Publisher</th>
-                <th>Number of Page</th>
-                <th>Actions</th>
+                <th class="text-center">Book id</th>
+                <th class="text-center">Title</th>
+                <th class="text-center">Author</th>
+                <th class="text-center">Publisher</th>
+                <th class="text-center">Number of Page</th>
+                <th class="text-center">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -136,13 +140,13 @@ if (!isset($_SESSION["user"])) {
         while($data = mysqli_fetch_array($result)){
             ?>
             <tr>
-                <td><?php echo $data['book_id']; ?></td>
-                <td><?php echo $data['title']; ?></td>
-                <td><?php echo $data['author']; ?></td>
-                <td><?php echo $data['publisher']; ?></td>
-                <td><?php echo $data['page']; ?></td>
-                <td>
-                    <a href="view.php?id=<?php echo $data['id']; ?>" class="btn btn-info">view</a>
+                <td class="text-center"><?php echo $data['book_id']; ?></td>
+                <td class="text-center"><?php echo $data['title']; ?></td>
+                <td class="text-center"><?php echo $data['author']; ?></td>
+                <td class="text-center"><?php echo $data['publisher']; ?></td>
+                <td class="text-center"><?php echo $data['page']; ?></td>
+                <td class="text-center">
+                    <a href="view.php?id=<?php echo $data['id']; ?>" class="btn btn-info">View</a>
                     <a href="edit.php?id=<?php echo $data['id']; ?>" class="btn btn-warning">Edit</a>
                     <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $data['id']; ?>)" class="btn btn-danger">Delete</a>
                 </td>
